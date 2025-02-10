@@ -7,5 +7,33 @@
     </h2> 
     <p>Author: {{ book.author }}</p> 
     <p>Price: {{ book.price }}</p>
+    <div>
+      <h3>Reviews</h3>
+      <ul>
+        {% for review in book.reviews.all %}
+        <li>{{ review.review }} ({{ review.author }})</li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
-{% endblock content %}
+{% endblock content %}from django.contrib import admin
+from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin
+
+from .forms import CustomUserChangeForm, CustomUserCreationForm
+
+CustomUser = get_user_model()
+
+
+class CustomUserAdmin(UserAdmin):
+    add_form = CustomUserCreationForm
+    form = CustomUserChangeForm
+    model = CustomUser
+    list_display = [
+        "email",
+        "username",
+        "is_superuser",
+    ]
+
+
+admin.site.register(CustomUser, CustomUserAdmin)
