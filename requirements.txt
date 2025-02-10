@@ -7,3 +7,4 @@ crispy-bootstrap5
 django-allauth
 environs[django]
 pillow
+django-debug-toolbar
