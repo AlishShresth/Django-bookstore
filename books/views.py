@@ -6,6 +6,8 @@ from django.contrib.auth.mixins import (
 )
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
+
 
 from .models import Book, Review
 
@@ -58,10 +60,20 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
     template_name = "books/review_form.html"
     login_url = "account_login"
 
+    def dispatch(self, request, *args, **kwargs):
+        # Fetch the book once and store it for reuse
+        self.book = get_object_or_404(Book, pk=self.kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
-        form.instance.book = Book.objects.get(pk=self.kwargs['pk'])
+        form.instance.book = self.book
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['book'] = self.book
+        return context
 
     def get_success_url(self):
         return reverse_lazy("book_detail", kwargs={"pk": self.kwargs['pk']})

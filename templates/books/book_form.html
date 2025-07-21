@@ -1,10 +1,26 @@
-{% extends "base.html" %}
+{% extends "_base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Add a New Book{% endblock title %}
+
 {% block content %}
-  <h1>Add a New Book</h1>
+<div class="container mt-5">
+  <h1 class="mb-4">Add a New Book</h1>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Book</button>
+
+    {% for field in form %}
+      <div class="mb-3">
+        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+        {% render_field field class="form-control" %}
+        {% for error in field.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary">Save Book</button>
+    <a href="{% url 'book_list' %}" class="btn btn-secondary ms-2">Cancel</a>
   </form>
-  <a href="{% url 'book_list' %}">Cancel</a>
-{% endblock %}
+</div>
+{% endblock content %}
