@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import socket
 from pathlib import Path
 from environs import Env
+import os
+import dj_database_url
 
 env = Env()
 env.read_env()
@@ -24,13 +26,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_SECRET_KEY")
+# SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DJANGO_DEBUG")
+# DEBUG = env.bool("DJANGO_DEBUG")
 
-ALLOWED_HOSTS = [".pythonanywhere.com", "localhost", "127.0.0.1"]
-
+# ALLOWED_HOSTS = [".pythonanywhere.com", "localhost", "127.0.0.1"]
+DEBUG = os.getenv("DEBUG", "False") == "True"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "your-default-secret-key")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,https://django-bookstore-425a.onrender.com").split(",")
 
 # Application definition
 
@@ -92,8 +96,14 @@ WSGI_APPLICATION = "django_project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     "default": env.dj_db_url("DATABASE_URL", default="postgres://postgres@db/postgres")
+# }
 DATABASES = {
-    "default": env.dj_db_url("DATABASE_URL", default="postgres://postgres@db/postgres")
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600
+    )
 }
 
 

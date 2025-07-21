@@ -11,8 +11,13 @@ WORKDIR /code
 
 # Install dependencies
 COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
 COPY . .
 
+# Expose port (Render uses 10000 by default for Docker)
+EXPOSE 10000
+
+# Run gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "your_project.wsgi:application"]
