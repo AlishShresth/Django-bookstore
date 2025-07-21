@@ -51,7 +51,7 @@ class BookCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     fields = ['title', 'author', 'isbn', 'description', 'published_date', 'publisher', 'pages', 'language', 'genre', 'price', 'cover']
     template_name = "books/book_form.html"
     login_url = "account_login"
-    permission_required = "books.special_status"
+    # permission_required = "books.special_status"
     success_url = reverse_lazy("book_list")
 
 class ReviewCreateView(LoginRequiredMixin, CreateView):
