@@ -34,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ALLOWED_HOSTS = [".pythonanywhere.com", "localhost", "127.0.0.1"]
 DEBUG = os.getenv("DEBUG", "False") == "True"
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "your-default-secret-key")
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,https://django-bookstore-425a.onrender.com").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,django-bookstore-425a.onrender.com").split(",")
 
 # Application definition
 
