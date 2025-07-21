@@ -19,12 +19,11 @@ class BookListView(LoginRequiredMixin, ListView):
   paginate_by = 9
 
 
-class BookDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class BookDetailView(LoginRequiredMixin, DetailView):
   model = Book
   context_object_name = "book"
   template_name = "books/book_detail.html"
   login_url = "account_login"
-  permission_required = "books.special_status"
   queryset = Book.objects.all().prefetch_related('reviews__author',)
 
 class SearchResultsListView(LoginRequiredMixin, ListView):
@@ -46,12 +45,11 @@ class SearchResultsListView(LoginRequiredMixin, ListView):
     return Book.objects.none()
 
 
-class BookCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class BookCreateView(LoginRequiredMixin, CreateView):
     model = Book
     fields = ['title', 'author', 'isbn', 'description', 'published_date', 'publisher', 'pages', 'language', 'genre', 'price', 'cover']
     template_name = "books/book_form.html"
     login_url = "account_login"
-    # permission_required = "books.special_status"
     success_url = reverse_lazy("book_list")
 
 class ReviewCreateView(LoginRequiredMixin, CreateView):
