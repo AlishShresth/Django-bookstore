@@ -1,10 +1,12 @@
-{% extends '_base.html' %}
+{% extends "_base.html" %}
 {% load static %}
 
 {% block title %}Home{% endblock title %}
 
 {% block content %}
-    <h1>Homepage</h1>
-    <img class="bookcover" src="{% static 'images/dfp.jpg' %}" alt="dfp">    
+<div class="text-center">
+    <h1 class="display-4 mb-4">Welcome to Bookstore</h1>
+    <img class="bookcover shadow-sm" src="{% static 'images/dfp.jpg' %}"
+        alt="book banner">
+</div>
 {% endblock content %}
-    

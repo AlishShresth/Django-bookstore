@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.core.paginator import Paginator
 from django.contrib.auth.mixins import (
   LoginRequiredMixin, 
   PermissionRequiredMixin
@@ -13,6 +14,8 @@ class BookListView(LoginRequiredMixin, ListView):
   context_object_name = "book_list"
   template_name = "books/book_list.html"
   login_url = "account_login"
+  queryset = Book.objects.select_related().all().order_by("title")
+  paginate_by = 9
 
 
 class BookDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -23,13 +26,20 @@ class BookDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
   permission_required = "books.special_status"
   queryset = Book.objects.all().prefetch_related('reviews__author',)
 
-class SearchResultsListView(ListView):
+class SearchResultsListView(LoginRequiredMixin, ListView):
   model = Book
   context_object_name = "book_list"
   template_name = "books/search_results.html"
 
   def get_queryset(self):
     query = self.request.GET.get("q")
-    return Book.objects.filter(
-      Q(title__icontains=query) | Q(author__icontains=query)
-    )
+    if query:
+      return Book.objects.filter(
+        Q(title__icontains=query) 
+        | Q(author__icontains=query) 
+        | Q(isbn__icontains=query)
+        | Q(genre__icontains=query)
+        | Q(publisher__icontains=query)
+        | Q(description__icontains=query)
+      ).distinct()
+    return Book.objects.none()

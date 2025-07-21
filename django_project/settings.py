@@ -160,10 +160,8 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # django-allauth config
 ACCOUNT_SESSION_REMEMBER = True
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*"]
 ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
 DEFAULT_FROM_EMAIL = "admin@djangobookstore.com"

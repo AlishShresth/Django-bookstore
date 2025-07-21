@@ -1,22 +1,40 @@
 {% extends "_base.html" %}
 {% block title %}{{ book.title }}{% endblock title %}
+
 {% block content %}
-  <div class="book-detail">
+<div class="row">
+  <div class="col-md-4">
     {% if book.cover %}
-    <img class="bookcover" src="{{ book.cover.url }}" alt="{{ book.title }}" >
+      <img class="img-fluid rounded shadow-sm" src="{{ book.cover.url }}" alt="{{ book.title }}">
     {% endif %}
-    <h2>
-      <a href="">{{ book.title }}</a>
-    </h2> 
-    <p>Author: {{ book.author }}</p> 
-    <p>Price: {{ book.price }}</p>
-    <div>
-      <h3>Reviews</h3>
-      <ul>
-        {% for review in book.reviews.all %}
-        <li>{{ review.review }} ({{ review.author }})</li>
-        {% endfor %}
-      </ul>
-    </div>
   </div>
+  <div class="col-md-8">
+    <h2>{{ book.title }}</h2>
+    <p><strong>Author:</strong> {{ book.author }}</p>
+    <p><strong>Genre:</strong> {{ book.genre }}</p>
+    <p><strong>Publisher:</strong> {{ book.publisher }}</p>
+    <p><strong>Pages:</strong> {{ book.pages }}</p>
+    <p><strong>Price:</strong> ${{ book.price }}</p>
+    <p><strong>Description:</strong> {{ book.description }}</p>
+  </div>
+</div>
+
+<hr>
+
+<div class="mt-4">
+  <h3>Reviews</h3>
+  {% if book.reviews.all %}
+    <ul class="list-group">
+      {% for review in book.reviews.all %}
+      <li class="list-group-item">
+        <strong>{{ review.author }}</strong>:
+        {{ review.review }}
+        {% if review.rating %}<br>⭐ {{ review.rating }}/5{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No reviews yet.</p>
+  {% endif %}
+</div>
 {% endblock content %}
