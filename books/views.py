@@ -4,9 +4,10 @@ from django.contrib.auth.mixins import (
   LoginRequiredMixin, 
   PermissionRequiredMixin
 )
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from django.urls import reverse_lazy
 
-from .models import Book
+from .models import Book, Review
 
 
 class BookListView(LoginRequiredMixin, ListView):
@@ -43,3 +44,26 @@ class SearchResultsListView(LoginRequiredMixin, ListView):
         | Q(description__icontains=query)
       ).distinct()
     return Book.objects.none()
+
+
+class BookCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = Book
+    fields = ['title', 'author', 'isbn', 'description', 'published_date', 'publisher', 'pages', 'language', 'genre', 'price', 'cover']
+    template_name = "books/book_form.html"
+    login_url = "account_login"
+    permission_required = "books.special_status"
+    success_url = reverse_lazy("book_list")
+
+class ReviewCreateView(LoginRequiredMixin, CreateView):
+    model = Review
+    fields = ['review', 'rating']
+    template_name = "books/review_form.html"
+    login_url = "account_login"
+
+    def form_valid(self, form):
+        form.instance.book = Book.objects.get(pk=self.kwargs['pk'])
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("book_detail", kwargs={"pk": self.kwargs['pk']})
